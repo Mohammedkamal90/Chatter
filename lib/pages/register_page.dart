@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:chatter/services/media_service.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 
 import '../consts.dart';
 
@@ -12,7 +14,17 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  final GetIt _getIt = GetIt.instance;
+
+  late MediaService _mediaService;
+
   File? selectedImage;
+
+  @override
+  void initState() {
+    super.initState();
+    _mediaService = _getIt.get<MediaService>();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,11 +90,21 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   Widget _pfpSelectionField() {
-    return CircleAvatar(
-      radius: MediaQuery.of(context).size.width * 0.15,
-      backgroundImage: selectedImage != null
-          ? FileImage(selectedImage!)
-          : NetworkImage(PLACEHOLDER_PFP) as ImageProvider,
+    return GestureDetector(
+      onTap: () async {
+        File? file = await _mediaService.getImageFromGallery();
+        if (file != null) {
+          setState(() {
+            selectedImage = file;
+          });
+        }
+      },
+      child: CircleAvatar(
+        radius: MediaQuery.of(context).size.width * 0.15,
+        backgroundImage: selectedImage != null
+            ? FileImage(selectedImage!)
+            : NetworkImage(PLACEHOLDER_PFP) as ImageProvider,
+      ),
     );
   }
 }

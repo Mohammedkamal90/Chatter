@@ -1,6 +1,7 @@
 import 'package:chatter/firebase_options.dart';
 import 'package:chatter/services/alert_service.dart';
 import 'package:chatter/services/auth_service.dart';
+import 'package:chatter/services/media_service.dart';
 import 'package:chatter/services/navigation_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get_it/get_it.dart';
@@ -21,5 +22,8 @@ Future<void> registerServices() async {
   );
   getIt.registerSingleton<AlertService>(
     AlertService(),
+  );
+  getIt.registerSingleton<MediaService>(
+    MediaService(),
   );
 }
