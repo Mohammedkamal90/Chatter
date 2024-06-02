@@ -1,4 +1,5 @@
 import 'package:chatter/model/chat.dart';
+import 'package:chatter/model/message.dart';
 import 'package:chatter/model/user_profile.dart';
 import 'package:chatter/services/auth_service.dart';
 import 'package:chatter/utils.dart';
@@ -62,5 +63,23 @@ class DatabaseService {
       messages: [],
     );
     await docRef.set(chat);
+  }
+
+  Future<void> sendChatMessage(
+    String uid1,
+    String uid2,
+    Message message,
+  ) async {
+    String chatID = generateChatID(uid1: uid1, uid2: uid2);
+    final docRef = _chatsCollection!.doc(chatID);
+    await docRef.update(
+      {
+        "messages": FieldValue.arrayUnion(
+          [
+            message.toJson(),
+          ],
+        )
+      },
+    );
   }
 }
