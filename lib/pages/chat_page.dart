@@ -1,7 +1,12 @@
+import 'dart:io';
+
+import 'package:chatter/model/chat.dart';
 import 'package:chatter/model/message.dart';
 import 'package:chatter/model/user_profile.dart';
 import 'package:chatter/services/auth_service.dart';
 import 'package:chatter/services/database_service.dart';
+import 'package:chatter/services/media_service.dart';
+import 'package:chatter/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +28,7 @@ class _ChatPageState extends State<ChatPage> {
 
   late AuthService _authService;
   late DatabaseService _databaseService;
+  late MediaService _mediaService;
 
   ChatUser? currentUser, otherUser;
   @override
@@ -30,6 +36,7 @@ class _ChatPageState extends State<ChatPage> {
     super.initState();
     _authService = _getIt.get<AuthService>();
     _databaseService = _getIt.get<DatabaseService>();
+    _mediaService = _getIt.get<MediaService>();
     currentUser = ChatUser(
       id: _authService.user!.uid,
       firstName: _authService.user!.displayName,
@@ -54,17 +61,29 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Widget _buildUI() {
-    return DashChat(
-      messageOptions: MessageOptions(
-        showOtherUsersAvatar: true,
-        showTime: true,
-      ),
-      inputOptions: InputOptions(
-        alwaysShowSend: true,
-      ),
-      currentUser: currentUser!,
-      onSend: _sendMessage,
-      messages: [],
+    return StreamBuilder(
+      stream: _databaseService.getChatData(currentUser!.id, otherUser!.id),
+      builder: (context, snapshot) {
+        Chat? chat = snapshot.data?.data();
+        List<ChatMessage> messages = [];
+        if (chat != null && chat.messages != null) {
+          messages = _generateChatMessagesList(
+            chat.messages!,
+          );
+        }
+        return DashChat(
+          messageOptions: const MessageOptions(
+            showOtherUsersAvatar: true,
+            showTime: true,
+          ),
+          inputOptions: InputOptions(alwaysShowSend: true, trailing: [
+            _mediaMessageButton(),
+          ]),
+          currentUser: currentUser!,
+          onSend: _sendMessage,
+          messages: messages,
+        );
+      },
     );
   }
 
@@ -79,6 +98,34 @@ class _ChatPageState extends State<ChatPage> {
       currentUser!.id,
       otherUser!.id,
       message,
+    );
+  }
+
+  List<ChatMessage> _generateChatMessagesList(List<Message> messages) {
+    List<ChatMessage> chatMessages = messages.map((m) {
+      return ChatMessage(
+        user: m.senderID == currentUser!.id ? currentUser! : otherUser!,
+        text: m.content!,
+        createdAt: m.sentAt!.toDate(),
+      );
+    }).toList();
+    chatMessages.sort(
+      (a, b) {
+        return b.createdAt.compareTo(a.createdAt);
+      },
+    );
+    return chatMessages;
+  }
+
+  Widget _mediaMessageButton() {
+    return IconButton(
+      onPressed: () async {
+        File? file = await _mediaService.getImageFromGallery();
+      },
+      icon: Icon(
+        Icons.image,
+        color: Theme.of(context).colorScheme.primary,
+      ),
     );
   }
 }
