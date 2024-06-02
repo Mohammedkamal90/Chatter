@@ -1,7 +1,9 @@
+import 'package:chatter/model/user_profile.dart';
 import 'package:chatter/services/alert_service.dart';
 import 'package:chatter/services/auth_service.dart';
 import 'package:chatter/services/database_service.dart';
 import 'package:chatter/services/navigation_service.dart';
+import 'package:chatter/widgets/chat_title.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
@@ -80,9 +82,17 @@ class _HomePageState extends State<HomePage> {
               child: Text("Unable to load data."),
             );
           }
-          print(snapshot.data);
           if (snapshot.hasData && snapshot.data != null) {
-            return ListView();
+            final users = snapshot.data!.docs;
+            return ListView.builder(
+                itemCount: users.length,
+                itemBuilder: (context, index) {
+                  UserProfile user = users[index].data();
+                  return ChatTitle(
+                    userProfile: user,
+                    onTap: () {},
+                  );
+                });
           }
           return const Center(
             child: CircularProgressIndicator(),
