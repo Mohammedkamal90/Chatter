@@ -4,6 +4,7 @@ import 'package:chatter/services/auth_service.dart';
 import 'package:chatter/services/media_service.dart';
 import 'package:chatter/services/navigation_service.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:chatter/services/storage_service.dart';
 import 'package:get_it/get_it.dart';
 
 Future<void> setupFirebase() async {
@@ -25,5 +26,8 @@ Future<void> registerServices() async {
   );
   getIt.registerSingleton<MediaService>(
     MediaService(),
+  );
+  getIt.registerSingleton<StorageService>(
+    StorageService(),
   );
 }
