@@ -223,10 +223,10 @@ class _RegisterPageState extends State<RegisterPage> {
             }
           } catch (e) {
             print(e);
-            // _alertService.showToast(
-            //   text: "Failed to register, Please try again!",
-            //   icon: Icons.error,
-            // );
+            _alertService.showToast(
+              text: "Failed to register, Please try again!",
+              icon: Icons.error,
+            );
           }
           setState(() {
             isLoading = false;

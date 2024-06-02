@@ -1,5 +1,6 @@
 import 'package:chatter/services/alert_service.dart';
 import 'package:chatter/services/auth_service.dart';
+import 'package:chatter/services/database_service.dart';
 import 'package:chatter/services/navigation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -17,6 +18,7 @@ class _HomePageState extends State<HomePage> {
   late AuthService _authService;
   late NavigationService _navigationService;
   late AlertService _alertService;
+  late DatabaseService _databaseService;
 
   @override
   void initState() {
@@ -24,6 +26,7 @@ class _HomePageState extends State<HomePage> {
     _authService = _getIt.get<AuthService>();
     _navigationService = _getIt.get<NavigationService>();
     _alertService = _getIt.get<AlertService>();
+    _databaseService = _getIt.get<DatabaseService>();
   }
 
   @override
@@ -52,6 +55,38 @@ class _HomePageState extends State<HomePage> {
           )
         ],
       ),
+      body: _buildUI(),
     );
+  }
+
+  Widget _buildUI() {
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 15.0,
+          vertical: 20.0,
+        ),
+        child: _chatsList(),
+      ),
+    );
+  }
+
+  Widget _chatsList() {
+    return StreamBuilder(
+        stream: _databaseService.getUserProfiles(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return const Center(
+              child: Text("Unable to load data."),
+            );
+          }
+          print(snapshot.data);
+          if (snapshot.hasData && snapshot.data != null) {
+            return ListView();
+          }
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        });
   }
 }
