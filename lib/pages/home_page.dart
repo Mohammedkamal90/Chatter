@@ -88,9 +88,14 @@ class _HomePageState extends State<HomePage> {
                 itemCount: users.length,
                 itemBuilder: (context, index) {
                   UserProfile user = users[index].data();
-                  return ChatTitle(
-                    userProfile: user,
-                    onTap: () {},
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 10.0,
+                    ),
+                    child: ChatTitle(
+                      userProfile: user,
+                      onTap: () {},
+                    ),
                   );
                 });
           }
