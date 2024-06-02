@@ -2,7 +2,6 @@ import 'package:chatter/pages/home_page.dart';
 import 'package:chatter/pages/login_page.dart';
 import 'package:chatter/pages/register_page.dart';
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
 
 class NavigationService {
   late GlobalKey<NavigatorState> _navigatorKey;
@@ -23,6 +22,9 @@ class NavigationService {
 
   NavigationService() {
     _navigatorKey = GlobalKey<NavigatorState>();
+  }
+  void push(MaterialPageRoute route) {
+    _navigatorKey.currentState?.push(route);
   }
 
   void pushName(String routeName) {

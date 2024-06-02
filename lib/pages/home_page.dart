@@ -1,4 +1,5 @@
 import 'package:chatter/model/user_profile.dart';
+import 'package:chatter/pages/chat_page.dart';
 import 'package:chatter/services/alert_service.dart';
 import 'package:chatter/services/auth_service.dart';
 import 'package:chatter/services/database_service.dart';
@@ -106,6 +107,15 @@ class _HomePageState extends State<HomePage> {
                             user.uid!,
                           );
                         }
+                        _navigationService.push(
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return ChatPage(
+                                chatUser: user,
+                              );
+                            },
+                          ),
+                        );
                       },
                     ),
                   );
