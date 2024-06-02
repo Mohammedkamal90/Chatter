@@ -14,7 +14,9 @@ class ChatTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      onTap: () {onTap()},
+      onTap: () {
+        onTap();
+      },
       dense: false,
       leading: CircleAvatar(
         backgroundImage: NetworkImage(
