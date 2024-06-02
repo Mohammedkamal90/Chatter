@@ -1,6 +1,7 @@
 import 'dart:io';
-
 import 'package:chatter/services/media_service.dart';
+import 'package:chatter/services/navigation_service.dart';
+import 'package:chatter/widgets/custom_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
@@ -17,13 +18,16 @@ class _RegisterPageState extends State<RegisterPage> {
   final GetIt _getIt = GetIt.instance;
 
   late MediaService _mediaService;
+  late NavigationService _navigationService;
 
+  String? email, password, name;
   File? selectedImage;
 
   @override
   void initState() {
     super.initState();
     _mediaService = _getIt.get<MediaService>();
+    _navigationService = _getIt.get<NavigationService>();
   }
 
   @override
@@ -45,6 +49,7 @@ class _RegisterPageState extends State<RegisterPage> {
           children: [
             _headerText(),
             _registerForm(),
+            _loginAccountLink(),
           ],
         ),
       ),
@@ -83,7 +88,49 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
       child: Form(
         child: Column(
-          children: [_pfpSelectionField()],
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            _pfpSelectionField(),
+            CustomFormField(
+              hintText: "Name",
+              height: MediaQuery.sizeOf(context).height * 0.1,
+              validationRegEx: NAME_VALIDATION_REGEX,
+              onSaved: (value) {
+                setState(
+                  () {
+                    name = value;
+                  },
+                );
+              },
+            ),
+            CustomFormField(
+              hintText: "Email",
+              height: MediaQuery.sizeOf(context).height * 0.1,
+              validationRegEx: EMAIL_VALIDATION_REGEX,
+              onSaved: (value) {
+                setState(
+                  () {
+                    email = value;
+                  },
+                );
+              },
+            ),
+            CustomFormField(
+              hintText: "Password",
+              height: MediaQuery.sizeOf(context).height * 0.1,
+              validationRegEx: PASSWORD_VALIDATION_REGEX,
+              onSaved: (value) {
+                setState(
+                  () {
+                    password = value;
+                  },
+                );
+              },
+            ),
+            _registerButton()
+          ],
         ),
       ),
     );
@@ -104,6 +151,42 @@ class _RegisterPageState extends State<RegisterPage> {
         backgroundImage: selectedImage != null
             ? FileImage(selectedImage!)
             : NetworkImage(PLACEHOLDER_PFP) as ImageProvider,
+      ),
+    );
+  }
+
+  Widget _registerButton() {
+    return SizedBox(
+      width: MediaQuery.sizeOf(context).width,
+      child: MaterialButton(
+        color: Theme.of(context).colorScheme.primary,
+        child: const Text(
+          "Register",
+          style: TextStyle(color: Colors.white),
+        ),
+        onPressed: () {},
+      ),
+    );
+  }
+
+  Widget _loginAccountLink() {
+    return Expanded(
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          const Text("Already have an Account?"),
+          GestureDetector(
+            onTap: () {
+              _navigationService.gotBack();
+            },
+            child: const Text(
+              "Log In",
+              style: TextStyle(fontWeight: FontWeight.w800),
+            ),
+          )
+        ],
       ),
     );
   }
