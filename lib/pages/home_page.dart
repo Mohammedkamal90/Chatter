@@ -58,6 +58,7 @@ class _HomePageState extends State<HomePage> {
           )
         ],
       ),
+      backgroundColor: Color.fromARGB(255, 224, 226, 226),
       body: _buildUI(),
     );
   }

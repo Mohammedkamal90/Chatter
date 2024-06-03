@@ -49,6 +49,7 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
+      backgroundColor: Color.fromARGB(255, 224, 226, 226),
       body: _buildUI(),
     );
   }

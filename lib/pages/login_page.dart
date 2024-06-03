@@ -34,6 +34,11 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Chatter'),
+        backgroundColor: const Color.fromARGB(255, 0, 122, 122),
+      ),
+      backgroundColor: Color.fromARGB(255, 224, 226, 226),
       resizeToAvoidBottomInset: false,
       body: _buildUI(),
     );

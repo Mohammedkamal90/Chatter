@@ -1,0 +1,24 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+
+		{
+			"name": "sdk gphone64 x86 64 (mobile)",
+			"request": "launch",
+			"type": "dart",
+			"deviceId": "emulator-5554"
+		},
+		{
+			"name": "sdk gphone64 x86 64 (mobile)",
+			"request": "launch",
+			"type": "dart",
+			"deviceId": "emulator-5556"
+		},
+	],
+	"compounds": [
+		{
+			"name": "All Devices",
+			"configurations": ["sdk gphone64 x86 64 (mobile)", "sdk gphone64 x86 64 (mobile)"],
+		}
+	]
+}

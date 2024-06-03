@@ -59,6 +59,7 @@ class _ChatPageState extends State<ChatPage> {
           widget.chatUser.name!,
         ),
       ),
+      backgroundColor: Color.fromARGB(255, 224, 226, 226),
       body: _buildUI(),
     );
   }
@@ -126,6 +127,13 @@ class _ChatPageState extends State<ChatPage> {
         return ChatMessage(
           user: m.senderID == currentUser!.id ? currentUser! : otherUser!,
           createdAt: m.sentAt!.toDate(),
+          medias: [
+            ChatMedia(
+              url: m.content!,
+              fileName: "",
+              type: MediaType.image,
+            )
+          ],
         );
       } else {
         return ChatMessage(
